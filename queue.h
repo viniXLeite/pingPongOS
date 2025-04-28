@@ -1,9 +1,5 @@
-// PingPongOS - PingPong Operating System
-// Prof. Carlos A. Maziero, DINF UFPR
-// Versão 1.4 -- Janeiro de 2022
-// Definição e operações em uma fila genérica.
-
-// ESTE ARQUIVO NÃO DEVE SER MODIFICADO - ELE SERÁ SOBRESCRITO NOS TESTES
+#include <stdio.h>
+#include <stdlib.h>
 
 #ifndef __QUEUE__
 #define __QUEUE__
@@ -12,51 +8,158 @@
 #define NULL ((void *) 0)
 #endif
 
-//------------------------------------------------------------------------------
-// estrutura de uma fila genérica, sem conteúdo definido.
-// Veja um exemplo de uso desta estrutura em testafila.c
+typedef struct queue_t {
+    int data;
+    struct queue_t *next;
+    struct queue_t *prev;
+} queue_t;
 
-typedef struct queue_t
-{
-   struct queue_t *prev ;  // aponta para o elemento anterior na fila
-   struct queue_t *next ;  // aponta para o elemento seguinte na fila
-} queue_t ;
+int queue_size (queue_t *queue) {
+    int size = 0;
+    queue_t* current = queue;
+    queue_t* head =  queue;
 
-//------------------------------------------------------------------------------
-// Conta o numero de elementos na fila
-// Retorno: numero de elementos na fila
+    // Caso a lista esteja vazia 
+    if (queue == NULL) return 0; 
 
-int queue_size (queue_t *queue) ;
+    while (current->next != head) {
+        size++;
+        current = current->next;
+    }
 
-//------------------------------------------------------------------------------
-// Percorre a fila e imprime na tela seu conteúdo. A impressão de cada
-// elemento é feita por uma função externa, definida pelo programa que
-// usa a biblioteca. Essa função deve ter o seguinte protótipo:
-//
-// void print_elem (void *ptr) ; // ptr aponta para o elemento a imprimir
+    return size+1;
+}
 
-void queue_print (char *name, queue_t *queue, void print_elem (void*) ) ;
+int queue_append (queue_t **queue, queue_t *elem) {
+    // Deferencia o ponteiro o ponteiro de ponteiro
+    queue_t *head = *queue;
+    queue_t *current = *queue;
 
-//------------------------------------------------------------------------------
-// Insere um elemento no final da fila.
-// Condicoes a verificar, gerando msgs de erro:
-// - a fila deve existir
-// - o elemento deve existir
-// - o elemento nao deve estar em outra fila
-// Retorno: 0 se sucesso, <0 se ocorreu algum erro
+    // Trata o caso da lista estar vazia
+    if ((*queue) == NULL) {
+        
+        (*queue) = elem; // Utiliza o espaço alocado para 'elem'
+        (*queue)->data = elem->data;
+        (*queue)->next = (*queue);
+        (*queue)->prev = (*queue);
+        
+        return 0;
+    }
 
-int queue_append (queue_t **queue, queue_t *elem);
+    else {
+        // Percorre a lista até encontrar a cauda dela        
+        while (current->next != head) {
+            current = current->next;
+        }
+        // Adiciona elem ao último nó da lista
+        current->next = elem;
+        elem->prev = current;
+        elem->next = head;
+    }
+    
+    if (elem->prev == current && elem->next == head) {
+        return 0;
+    }
+    else return -1;
+}
 
-//------------------------------------------------------------------------------
-// Remove o elemento indicado da fila, sem o destruir.
-// Condicoes a verificar, gerando msgs de erro:
-// - a fila deve existir
-// - a fila nao deve estar vazia
-// - o elemento deve existir
-// - o elemento deve pertencer a fila indicada
-// Retorno: 0 se sucesso, <0 se ocorreu algum erro
+void print_elem (void *ptr) {
+    queue_t* elem = (queue_t*) ptr; // Atribui o tipo queue para ptr
+    printf("%d, ", elem->data);
+    return;
+}
 
-int queue_remove (queue_t **queue, queue_t *elem) ;
+void queue_print (char* name, queue_t *queue, void print_elem (void*) ) {
+    queue_t *head = queue;
+    queue_t *current =  queue;
+    
+    // Verifica se a lisra está vazia
+    if (queue == NULL) {
+        printf("The list is empty\n");
+        return;
+    }
+    
+    else {
+        print_elem(current);
+        while (current->next != head) {
+            current = current->next;
+            print_elem(current);
+        }
+    }
+    printf("\n\n");
+}
+
+// Ver se funciona
+int queue_remove (queue_t **queue, queue_t *elem) {
+    queue_t *head = *queue;
+    queue_t *tail = *queue;
+    queue_t *current = *queue;
+    queue_t *node = NULL;
+
+    // Verifica se a fila e se o elemento existem, caso não retorna -1
+    if (*queue == NULL || elem == NULL) return -1;
+    
+    else {
+
+        // Verifica se o elem pertence à lista
+        while (current->next != head) {
+
+            if (current == elem) {
+                node = current;
+                current = current->next;
+            }
+            else current = current->next;
+        
+        }
+ 
+        // Armazena o valor da cauda da lista
+        tail = current; 
+
+        // Caso em que o elem é igual a cauda
+        if (elem == tail) node = tail;
+
+        // Caso em que o elem não pertence à lista
+        if (node == NULL) return -1;
+
+        // Caso em que o elem pertece à lista
+        else {
+            // Caso em que elem é igual à cabeça
+            if (node == head) {
+                // Caso em que a lista contém apenas um elemento
+                if (queue_size((*queue)) == 1) {
+                    (*queue) = NULL;
+                    return 0;
+                }
+
+                else {
+                    node->next->prev = tail;
+                    tail->next = node->next;
+                    // Substitui a cabeça da lista
+                    (*queue) = node->next;
+                }
+            }
+
+            // Caso que elem é igual à cauda
+            else if (node == tail) {
+                node->prev->next = head;
+                head->prev = node->prev;
+            }
+
+            else {
+                node->prev->next = node->next;
+                node->next->prev = node->prev;
+            }
+
+            // Retorna 0 caso a remoção seja bem sucedida
+            return 0; 
+        }
+
+    }
+
+    // Retorna -1 caso haja algum erro na remoação de elem
+    return -1;
+}
+
 
 #endif
 

@@ -17,7 +17,8 @@ int queue_size (queue_t *queue) {
     queue_t* current = queue;
     queue_t* head =  queue;
 
-    if (queue == NULL) return 0; // Caso a lista esteja vazia 
+    // Caso a lista esteja vazia 
+    if (queue == NULL) return 0; 
 
     while (current->next != head) {
         size++;
@@ -124,6 +125,7 @@ int queue_remove (queue_t **queue, queue_t *elem) {
 
         // Caso em que o elem pertece à lista
         else {
+            // Caso em que elem é igual à cabeça
             if (node == head) {
                 // Caso em que a lista contém apenas um elemento
                 if (queue_size((*queue)) == 1) {
@@ -138,11 +140,13 @@ int queue_remove (queue_t **queue, queue_t *elem) {
                     (*queue) = node->next;
                 }
             }
+
+            // Caso que elem é igual à cauda
             else if (node == tail) {
                 node->prev->next = head;
                 head->prev = node->prev;
-                //tail = node->prev; // Verificar se essa linha faz sentido
             }
+
             else {
                 node->prev->next = node->next;
                 node->next->prev = node->prev;
@@ -154,9 +158,8 @@ int queue_remove (queue_t **queue, queue_t *elem) {
 
     }
 
-    // Retorna -1 caso haja algum erro na remoação do elem
+    // Retorna -1 caso haja algum erro na remoação de elem
     return -1;
-
 }
 
 
