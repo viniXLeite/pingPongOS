@@ -156,7 +156,7 @@ int queue_remove (queue_t **queue, queue_t *elem) {
 
     }
 
-    // Retorna -1 caso haja algum erro na remoação de elem
+    // Retorna -1 caso haja algum erro na remoção de elem
     return -1;
 }
 
