@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "queue1.h" // Busca no diretório atual
+#include "queue.h" // Busca no diretório atual
 
 int main() {
     queue_t *head = NULL;
