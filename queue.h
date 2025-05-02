@@ -9,7 +9,7 @@
 #endif
 
 typedef struct queue_t {
-    int data;
+    void* data;
     struct queue_t *next;
     struct queue_t *prev;
 } queue_t;
@@ -63,11 +63,6 @@ int queue_append (queue_t **queue, queue_t *elem) {
     else return -1;
 }
 
-void print_elem (void *ptr) {
-    queue_t* elem = (queue_t*) ptr; // Atribui o tipo queue para ptr
-    printf("%d, ", elem->data);
-    return;
-}
 
 void queue_print (char* name, queue_t *queue, void print_elem (void*) ) {
     queue_t *head = queue;

@@ -2,6 +2,15 @@
 #include <stdlib.h>
 #include "queue.h" // Busca no diretório atual
 
+void print_elem (void *ptr) {
+    queue_t* elem = (queue_t*) ptr; // Atribui o tipo queue para ptr
+
+    int *value = (int*) elem->data;
+
+    printf("%d, ", *value);
+    return;
+}
+
 int main() {
     queue_t *head = NULL;
     
@@ -10,7 +19,9 @@ int main() {
     printf("\n");
 
     queue_t* n1 = (queue_t*) malloc(sizeof(queue_t));
-    n1->data = 1;
+    int *d1 = malloc(sizeof(int));
+    *d1 = 1;
+    n1->data = d1;
     n1->prev = NULL;
     n1->next = NULL;
     
@@ -22,7 +33,9 @@ int main() {
 
     // --------------------------------------------- // 
     queue_t* n2 = (queue_t*) malloc(sizeof(queue_t));
-    n2->data = 2;
+    int *d2 = malloc(sizeof(int));
+    *d2 = 2;
+    n2->data = d2;
     n2->prev = NULL;
     n2->next = NULL;
     a = queue_append(&head, n2);
@@ -33,7 +46,9 @@ int main() {
 
     // --------------------------------------------- // 
     queue_t* n3 = (queue_t*) malloc(sizeof(queue_t));
-    n3->data = 3;
+    int *d3 = malloc(sizeof(int));
+    *d3 = 3;
+    n3->data = d3;
     n3->prev = NULL;
     n3->next = NULL;
     a = queue_append(&head, n3);
@@ -44,7 +59,9 @@ int main() {
 
     // --------------------------------------------- // 
     queue_t* n4 = (queue_t*) malloc(sizeof(queue_t));
-    n4->data = 4;
+    int *d4 = malloc(sizeof(int));
+    *d4 = 4;
+    n4->data = d4;
     n4->prev = NULL;
     n4->next = NULL;
     a = queue_append(&head, n4);
@@ -55,7 +72,9 @@ int main() {
 
     // --------------------------------------------- // 
     queue_t* n5 = (queue_t*) malloc(sizeof(queue_t));
-    n5->data = 5;
+    int *d5 = malloc(sizeof(int));
+    *d5 = 5; 
+    n5->data = d5;
     n5->prev = NULL;
     n5->next = NULL;
     a = queue_append(&head, n5);
